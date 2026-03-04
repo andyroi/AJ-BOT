@@ -1,21 +1,57 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AJ Bot</title>
-    <style>
-        body {font-family: Arial; max-width: 600px; margin: 50px auto;}
-        #chat-box { height: 400px; border: 1px solid #ccc; overflow-y: scroll; padding: 10px; margin-bottom: 10px;}
-        .user {color: blue}
-        .ai {color: green}
-        #input-box { width: 80%; padding: 10px; }
-        #send-btn { padding: 10px 20px; }
-    </style>
+    <link rel="stylesheet" href="style.css">
+    <!-- Lightweight markdown parser so AI responses render nicely -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 <body>
-    <h1>AJ Bot</h1>
-    <div id="chat-box"></div>
-    <input type="text" id="input-box" placeholder="Type your message here...">
-    <button id="send-btn">Send</button>
-    <script src ="chat.js"></script>
+    <div class="chat-container">
+        <!-- Header -->
+        <div class="chat-header">
+            <div class="avatar">AJ</div>
+            <div class="header-info">
+                <h1>AJ Bot</h1>
+                <span>Online</span>
+            </div>
+            <!-- Dark / Light toggle -->
+            <label class="theme-toggle" title="Toggle dark mode">
+                <input type="checkbox" id="theme-switch">
+                <span class="toggle-track">
+                    <span class="icon sun">☀️</span>
+                    <span class="icon moon">🌙</span>
+                </span>
+            </label>
+        </div>
+
+        <!-- Chat Messages -->
+        <div id="chat-box">
+            <div class="welcome" id="welcome">
+                <h2>Hello!</h2>
+                <p>Ask me about finance, gaming, anime, or life advice.</p>
+            </div>
+        </div>
+
+        <!-- Typing Indicator -->
+        <div class="typing-indicator" id="typing">
+            <span></span><span></span><span></span>
+        </div>
+
+        <!-- Input Bar -->
+        <div class="input-bar">
+            <input type="text" id="input-box" placeholder="Message AJ Bot…" autocomplete="off">
+            <button id="send-btn" aria-label="Send">
+                <svg viewBox="0 0 24 24">
+                    <line x1="12" y1="19" x2="12" y2="5"></line>
+                    <polyline points="5 12 12 5 19 12"></polyline>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <script src="chat.js"></script>
 </body>
 </html>
