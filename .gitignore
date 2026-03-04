@@ -1,0 +1,33 @@
+# ── Secrets & credentials ─────────────────────────────
+serviceAccountKey.json
+*.json
+!package.json
+
+# Environment variables
+.env
+
+# ── Python ────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.egg-info/
+dist/
+build/
+*.egg
+
+# ── Virtual environments ──────────────────────────────
+venv/
+.venv/
+env/
+
+# ── IDE / Editor ──────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# ── Node (if you ever add npm packages) ──────────────
+node_modules/
