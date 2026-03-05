@@ -217,6 +217,22 @@ def delete_conversation(conv_id):
     db.collection('users').document(uid).collection('conversations').document(conv_id).delete()
 
     return jsonify({"status": "Conversation deleted"})
+
+# ── /conversations/<id> PATCH endpoint (rename) ──────────────
+@app.route("/conversations/<conv_id>", methods=["PATCH"])
+def rename_conversation(conv_id):
+    """Rename a conversation."""
+    uid, error = verify_token(request)
+    if error:
+        return error
+
+    data = request.json
+    new_title = data.get('title', '').strip()
+    if not new_title:
+        return jsonify({"error": "Title cannot be empty"}), 400
+
+    update_conversation_title(uid, conv_id, new_title)
+    return jsonify({"status": "Conversation renamed", "title": new_title})
     
 if __name__ == "__main__": #only run when excute "API.py" directly, not when imported as a module
     app.run(debug=True, port = 5000) #start the flask server in debug mode (auto restarts when code changes and provides error messages in the browser)

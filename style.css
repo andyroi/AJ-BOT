@@ -292,6 +292,61 @@ body {
     opacity: 0.7;
 }
 
+/* ── Back-to-Home: Auth Screen (top-left pill) ────── */
+.back-home-btn {
+    position: absolute;
+    top: 28px;
+    left: 28px;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px 8px 12px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #f5f5f7;
+    font-size: 14px;
+    font-weight: 500;
+    font-family: inherit;
+    text-decoration: none;
+    transition: background 0.2s, border-color 0.2s;
+}
+
+.back-home-btn:hover {
+    background: rgba(255, 255, 255, 0.14);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.back-home-btn svg {
+    flex-shrink: 0;
+}
+
+/* ── Home Button (in chat header) ─────────────────── */
+.home-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: none;
+    background: transparent;
+    color: #98989f;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s, color 0.2s;
+    flex-shrink: 0;
+    text-decoration: none;
+    margin-left: auto;
+}
+
+.home-btn:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: #f5f5f7;
+}
+
 /* ── Logout Button (in chat header) ───────────────── */
 .logout-btn {
     width: 36px;
@@ -306,7 +361,7 @@ body {
     justify-content: center;
     transition: background 0.2s, color 0.2s;
     flex-shrink: 0;
-    margin-left: auto;
+    margin-left: 4px;
 }
 
 .logout-btn:hover {
@@ -336,25 +391,70 @@ body {
 /* ── Sidebar ────────────────────────────────────── */
 .sidebar {
     width: 260px;
-    min-width: 260px;
+    min-width: 0;
     background: rgba(255, 255, 255, 0.03);
     border-right: 1px solid rgba(255, 255, 255, 0.08);
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    transition: width 0.3s ease;
+}
+
+.sidebar.collapsed {
+    min-width: 60px;
+    width: 60px;
+}
+
+.sidebar.collapsed .sidebar-header {
+    padding: 12px 0;
+    justify-content: center;
+}
+
+.sidebar.collapsed .sidebar-header h2,
+.sidebar.collapsed .new-chat-btn {
+    display: none;
+}
+
+.sidebar.collapsed .sidebar-header-actions {
+    width: 100%;
+    justify-content: center;
+}
+
+.sidebar.collapsed .collapse-btn {
+    margin: 0 auto;
+}
+
+.sidebar.collapsed .conversation-list {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.sidebar.collapsed .collapse-btn svg {
+    transform: rotate(180deg);
 }
 
 .sidebar-header {
-    padding: 20px 20px 12px;
+    padding: 16px 12px 12px;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 8px;
 }
 
 .sidebar-header h2 {
     font-size: 17px;
     font-weight: 600;
     color: #f5f5f7;
+    white-space: nowrap;
+    overflow: hidden;
+    transition: opacity 0.2s;
+}
+
+.sidebar-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
 }
 
 .new-chat-btn {
@@ -379,6 +479,31 @@ body {
     transform: scale(0.92);
 }
 
+/* ── Collapse / Expand Button ───────────────── */
+.collapse-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    border: none;
+    background: transparent;
+    color: #98989f;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s, color 0.2s;
+    flex-shrink: 0;
+}
+
+.collapse-btn:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: #f5f5f7;
+}
+
+.collapse-btn svg {
+    transition: transform 0.3s ease;
+}
+
 /* ── Conversation List ──────────────────────────── */
 .conversation-list {
     flex: 1;
@@ -387,6 +512,7 @@ body {
     display: flex;
     flex-direction: column;
     gap: 4px;
+    transition: opacity 0.2s;
 }
 
 .conversation-list::-webkit-scrollbar {
@@ -431,36 +557,97 @@ body {
     white-space: nowrap;
 }
 
-.conversation-tab .tab-delete {
-    width: 20px;
-    height: 20px;
-    border-radius: 4px;
+/* ── 3-dot Kebab Menu Button ────────────────────── */
+.conversation-tab .tab-kebab {
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
     border: none;
     background: transparent;
     color: inherit;
     cursor: pointer;
-    font-size: 14px;
     display: flex;
     align-items: center;
     justify-content: center;
     opacity: 0;
     transition: opacity 0.15s, background 0.15s;
     flex-shrink: 0;
+    padding: 0;
 }
 
-.conversation-tab:hover .tab-delete {
+.conversation-tab:hover .tab-kebab {
+    opacity: 0.5;
+}
+
+.conversation-tab .tab-kebab:hover {
+    opacity: 1;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.conversation-tab.active .tab-kebab {
     opacity: 0.6;
 }
 
-.conversation-tab .tab-delete:hover {
-    opacity: 1;
-    background: rgba(255, 59, 48, 0.15);
-    color: #ff3b30;
+.conversation-tab.active .tab-kebab:hover {
+    background: rgba(255, 255, 255, 0.2);
 }
 
-.conversation-tab.active .tab-delete:hover {
-    background: rgba(255, 255, 255, 0.2);
-    color: #fff;
+/* ── Context Menu (Rename / Delete) ─────────────── */
+.tab-context-menu {
+    position: absolute;
+    z-index: 100;
+    min-width: 140px;
+    padding: 6px;
+    background: rgba(30, 30, 35, 0.95);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    animation: fadeIn 0.15s ease;
+}
+
+.tab-context-menu button {
+    width: 100%;
+    padding: 8px 14px;
+    border: none;
+    border-radius: 8px;
+    background: transparent;
+    color: #f5f5f7;
+    font-size: 14px;
+    font-family: inherit;
+    text-align: left;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+.tab-context-menu button:hover {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.tab-context-menu button.danger {
+    color: #ff6961;
+}
+
+.tab-context-menu button.danger:hover {
+    background: rgba(255, 59, 48, 0.12);
+}
+
+/* ── Inline Rename Input ────────────────────────── */
+.tab-rename-input {
+    width: 100%;
+    padding: 2px 6px;
+    border: 1px solid #0a84ff;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.08);
+    color: #f5f5f7;
+    font-size: 13px;
+    font-family: inherit;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(10, 132, 255, 0.25);
 }
 
 /* ── Sidebar Toggle (mobile) ──────────────────── */

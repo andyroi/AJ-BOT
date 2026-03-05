@@ -7,6 +7,7 @@ const conversationList = document.getElementById('conversation-list');
 const newChatBtn = document.getElementById('new-chat-btn');
 const sidebarToggle = document.getElementById('sidebar-toggle');
 const sidebar = document.getElementById('sidebar');
+const collapseBtn = document.getElementById('collapse-btn');
 
 // ── Multi-conversation state ─────────────────────────────────
 let currentConversationId = null;
@@ -39,19 +40,129 @@ function renderConversationList(conversations) {
         title.textContent = conv.title || 'New Chat';
         tab.appendChild(title);
 
-        const del = document.createElement('button');
-        del.className = 'tab-delete';
-        del.title = 'Delete conversation';
-        del.innerHTML = '&#x2715;';
-        del.addEventListener('click', (e) => {
+        // 3-dot kebab menu button
+        const kebab = document.createElement('button');
+        kebab.className = 'tab-kebab';
+        kebab.title = 'Options';
+        kebab.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg>';
+        kebab.addEventListener('click', (e) => {
             e.stopPropagation();
-            deleteConversation(conv.id);
+            showTabMenu(kebab, conv.id, conv.title || 'New Chat');
         });
-        tab.appendChild(del);
+        tab.appendChild(kebab);
 
         tab.addEventListener('click', () => switchConversation(conv.id));
         conversationList.appendChild(tab);
     });
+}
+
+// ── Context menu for conversation tabs ───────────────────────
+let activeMenu = null;
+
+function closeTabMenu() {
+    if (activeMenu) {
+        activeMenu.remove();
+        activeMenu = null;
+    }
+}
+
+function showTabMenu(anchor, convId, currentTitle) {
+    closeTabMenu();
+
+    const menu = document.createElement('div');
+    menu.className = 'tab-context-menu';
+
+    // Rename option
+    const renameBtn = document.createElement('button');
+    renameBtn.textContent = 'Rename';
+    renameBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        closeTabMenu();
+        startRename(convId, currentTitle);
+    });
+    menu.appendChild(renameBtn);
+
+    // Delete option
+    const deleteBtn = document.createElement('button');
+    deleteBtn.className = 'danger';
+    deleteBtn.textContent = 'Delete';
+    deleteBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        closeTabMenu();
+        deleteConversation(convId);
+    });
+    menu.appendChild(deleteBtn);
+
+    // Position below the kebab button
+    const rect = anchor.getBoundingClientRect();
+    const sidebarRect = sidebar.getBoundingClientRect();
+    menu.style.top = (rect.bottom - sidebarRect.top + 4) + 'px';
+    menu.style.left = (rect.left - sidebarRect.left - 60) + 'px';
+
+    sidebar.appendChild(menu);
+    activeMenu = menu;
+
+    // Close on outside click
+    setTimeout(() => {
+        document.addEventListener('click', closeTabMenu, { once: true });
+    }, 0);
+}
+
+// ── Rename a conversation ────────────────────────────────────
+function startRename(convId, currentTitle) {
+    const tab = conversationList.querySelector(`[data-id="${convId}"]`);
+    if (!tab) return;
+
+    const titleSpan = tab.querySelector('.tab-title');
+    const originalText = titleSpan.textContent;
+
+    // Replace title text with an input field
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.className = 'tab-rename-input';
+    input.value = currentTitle;
+    input.maxLength = 60;
+
+    titleSpan.textContent = '';
+    titleSpan.appendChild(input);
+    input.focus();
+    input.select();
+
+    async function commitRename() {
+        const newTitle = input.value.trim();
+        if (newTitle && newTitle !== originalText) {
+            await renameConversation(convId, newTitle);
+        } else {
+            titleSpan.textContent = originalText;
+        }
+    }
+
+    input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') { e.preventDefault(); input.blur(); }
+        if (e.key === 'Escape') { titleSpan.textContent = originalText; }
+    });
+    input.addEventListener('blur', commitRename, { once: true });
+    input.addEventListener('click', (e) => e.stopPropagation());
+}
+
+async function renameConversation(convId, newTitle) {
+    const token = getAuthToken();
+    if (!token) return;
+
+    try {
+        await fetch(`http://localhost:5000/conversations/${convId}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({ title: newTitle })
+        });
+        const conversations = await fetchConversationsList();
+        renderConversationList(conversations);
+    } catch (err) {
+        console.warn('Could not rename conversation:', err);
+    }
 }
 
 // ── Switch to a different conversation ───────────────────────
@@ -267,5 +378,12 @@ newChatBtn.addEventListener('click', createNewChat);
 
 sidebarToggle.addEventListener('click', () => {
     sidebar.classList.toggle('open');
+});
+
+// ── Sidebar Collapse / Expand (desktop) ─────────────────
+collapseBtn.addEventListener('click', () => {
+    sidebar.classList.toggle('collapsed');
+    const isCollapsed = sidebar.classList.contains('collapsed');
+    collapseBtn.title = isCollapsed ? 'Expand sidebar' : 'Collapse sidebar';
 });
 
