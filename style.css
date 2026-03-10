@@ -950,6 +950,47 @@ body {
     stroke-linejoin: round;
 }
 
+/* ── About Link Card (injected after AI response) ─── */
+.about-link-card {
+    align-self: flex-start;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    padding: 10px 16px;
+    background: rgba(0, 122, 255, 0.08);
+    border: 1px solid rgba(0, 122, 255, 0.2);
+    border-radius: 14px;
+    font-size: 14px;
+    color: #98989f;
+    animation: fadeIn 0.25s ease;
+}
+
+.about-link-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 12px;
+    border-radius: 20px;
+    background: #007aff;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 500;
+    font-family: inherit;
+    text-decoration: none;
+    transition: background 0.2s, transform 0.15s;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.about-link-btn:hover {
+    background: #0066d6;
+}
+
+.about-link-btn:active {
+    transform: scale(0.96);
+}
+
 /* ── Welcome State ────────────────────────────────── */
 .welcome {
     display: flex;

@@ -12,6 +12,39 @@ const collapseBtn = document.getElementById('collapse-btn');
 // ── Multi-conversation state ─────────────────────────────────
 let currentConversationId = null;
 
+// ── Detect "who/what is AJ Bot" type queries ─────────────────
+function isAboutAJBotQuery(message) {
+    const lower = message.toLowerCase().replace(/[?!.,]/g, '');
+    const patterns = [
+        /who\s+is\s+aj\s*bot/,
+        /what\s+is\s+aj\s*bot/,
+        /who\s+(made|created|built|developed)\s+aj\s*bot/,
+        /tell\s+me\s+about\s+aj\s*bot/,
+        /about\s+aj\s*bot/,
+        /who\s+are\s+you.*aj/,
+        /what\s+are\s+you.*aj/,
+    ];
+    return patterns.some(p => p.test(lower));
+}
+
+// ── Inject "learn more" link below the AI bubble ─────────────
+function addAboutLink() {
+    const card = document.createElement('div');
+    card.className = 'about-link-card';
+    card.innerHTML = `
+        <span>Want to know who created AJ Bot?</span>
+        <a href="about.html" class="about-link-btn" target="_blank" rel="noopener">
+            Click here to find out
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+        </a>
+    `;
+    chatBox.appendChild(card);
+    chatBox.scrollTop = chatBox.scrollHeight;
+}
+
 // ── Helper: create a chat bubble ─────────────────────────────
 function addMessage(text, type) {
     const bubble = document.createElement('div');
@@ -186,8 +219,16 @@ async function switchConversation(convId) {
         const data = await res.json();
 
         if (data.history && data.history.length > 0) {
+            let lastUserText = '';
             data.history.forEach(msg => {
-                addMessage(msg.text, msg.role === 'user' ? 'user' : 'ai');
+                const type = msg.role === 'user' ? 'user' : 'ai';
+                addMessage(msg.text, type);
+                if (type === 'user') {
+                    lastUserText = msg.text;
+                } else if (type === 'ai' && isAboutAJBotQuery(lastUserText)) {
+                    addAboutLink();
+                    lastUserText = '';
+                }
             });
         } else {
             chatBox.innerHTML = `
@@ -351,6 +392,10 @@ async function sendMessage() {
         }
         if (data.response) {
             addMessage(data.response, 'ai');
+            // Inject "about" link if the user asked who/what AJ Bot is
+            if (isAboutAJBotQuery(message)) {
+                addAboutLink();
+            }
         } else {
             addMessage('No response from server', 'error');
         }

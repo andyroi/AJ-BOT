@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About AJ Bot</title>
+    <link rel="stylesheet" href="about.css">
+</head>
+<body>
+
+    <!-- ── Gradient blobs background ──────────────────────────── -->
+    <div class="bg-blur" aria-hidden="true">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+
+    <!-- ── Navigation ─────────────────────────────────────────── -->
+    <nav class="about-nav">
+        <button onclick="history.back()" class="nav-btn">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+            Back
+        </button>
+        <a href="index.html" class="nav-btn">Home</a>
+    </nav>
+
+    <!-- ── Main Content ────────────────────────────────────────── -->
+    <main class="about-main">
+
+        <!-- Hero -->
+        <div class="hero">
+            <div class="avatar-lg">AJ</div>
+            <h1>AJ Bot</h1>
+            <p class="tagline">Your intelligent assistant for finance, gaming, anime, and life advice.</p>
+        </div>
+
+        <!-- Creator Section -->
+        <section class="card">
+            <h2>The Creator</h2>
+            <!-- TODO: Fill in creator info here -->
+            <p class="placeholder">Information about the creator coming soon. Stay tuned!</p>
+        </section>
+
+        <!-- About Section -->
+        <section class="card">
+            <h2>What is AJ Bot?</h2>
+            <p>AJ Bot is an AI-powered assistant with a friendly, Claude-like personality. It's designed to help you with real, everyday topics — no fluff, just useful answers.</p>
+            <ul>
+                <li><strong>Financial Education</strong> — ETFs, budgeting, investing concepts, and more</li>
+                <li><strong>Gaming</strong> — MMORPG recommendations, tips, and beginner guides</li>
+                <li><strong>Anime</strong> — Tailored picks based on your taste and favorites</li>
+                <li><strong>Life Advice</strong> — Practical, empathetic guidance for everyday challenges</li>
+            </ul>
+        </section>
+
+        <!-- Tech Stack Section -->
+        <section class="card">
+            <h2>Built With</h2>
+            <div class="tags">
+                <span class="tag">Gemini 2.5 Flash</span>
+                <span class="tag">Firebase Auth</span>
+                <span class="tag">Firestore</span>
+                <span class="tag">Python Flask</span>
+                <span class="tag">Vanilla JS</span>
+            </div>
+        </section>
+
+        <a href="web.html" class="cta-btn">Start Chatting with AJ Bot →</a>
+
+    </main>
+
+</body>
+</html>
